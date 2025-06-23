@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="input_radius">
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius</item>
+    </style>
+    <style name="hint_style">
+        <item name="fontFamily">@font/normal</item>
+    </style>
+</resources>

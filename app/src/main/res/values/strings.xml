@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">androidCA</string>
+    <string name="login_title">Let\'s start with who you are.</string>
+    <string name="username_hint">USERNAME</string>
+    <string name="password_hint">PASSWORD</string>
+    <string name="login_submission">Login</string>
+</resources>
