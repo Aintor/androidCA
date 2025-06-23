@@ -4,4 +4,6 @@
     <string name="username_hint">USERNAME</string>
     <string name="password_hint">PASSWORD</string>
     <string name="login_submission">Login</string>
+    <string name="fetch_title">Pick your photos</string>
+
 </resources>
