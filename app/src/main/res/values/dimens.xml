@@ -5,4 +5,5 @@
     <dimen name="button_radius">10dp</dimen>
     <dimen name="normal_size">10sp</dimen>
     <dimen name="input_size">10sp</dimen>
+    <dimen name="button_margin">10dp</dimen>
 </resources>

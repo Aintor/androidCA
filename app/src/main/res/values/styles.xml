@@ -6,7 +6,9 @@
         <item name="boxCornerRadiusTopEnd">@dimen/radius</item>
         <item name="boxCornerRadiusTopStart">@dimen/radius</item>
     </style>
-    <style name="hint_style">
-        <item name="fontFamily">@font/normal</item>
+    <style name="no_right_margin" parent="input_radius">
+        <item name="android:layout_marginTop">@dimen/margin_textedit</item>
+        <item name="android:layout_marginBottom">@dimen/margin_textedit</item>
+        <item name="android:layout_marginStart">@dimen/margin_textedit</item>
     </style>
 </resources>
