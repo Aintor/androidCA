@@ -43,6 +43,8 @@ class LoginFragment: Fragment() {
         loginButton.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
+                    val usernameText = username.text.toString()
+                    val passwordText = password.text.toString()
                     val url = URL("${getString(R.string.base_url)}/Login")
                     val conn = url.openConnection() as HttpURLConnection
                     conn.requestMethod = "POST"
@@ -50,8 +52,8 @@ class LoginFragment: Fragment() {
                     conn.doOutput = true
 
                     val json = JSONObject()
-                    json.put("username", username.text.toString())
-                    json.put("password", password.text.toString())
+                    json.put("username", usernameText)
+                    json.put("password", passwordText)
 
                     conn.outputStream.use {
                         it.write(json.toString().toByteArray())
@@ -74,7 +76,7 @@ class LoginFragment: Fragment() {
                         }
                     } else {
                         withContext(Dispatchers.Main) {
-                            //redirect to fetch fragment
+                            (activity as MainActivity).isLoginSuccessful(usernameText, isPaid)
                         }
                     }
                 } catch (_: Exception) {

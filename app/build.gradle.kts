@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.lottie)
     implementation(libs.motiontoast)
+    implementation(libs.jsoup)
 }
