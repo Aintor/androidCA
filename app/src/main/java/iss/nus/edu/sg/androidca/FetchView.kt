@@ -12,13 +12,10 @@ class FetchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null): FrameLayout(context, attrs) {
     private val binding = FetchViewBinding.inflate(LayoutInflater.from(context), this, true)
-    private lateinit var imageCard: MaterialCardView
-    private lateinit var imageView: ImageView
-    private lateinit var checkHint: ImageView
+    private val imageCard: MaterialCardView = binding.imageCard
+    private val imageView: ImageView = binding.imageView
+    private val checkHint: ImageView = binding.checkHint
     init {
-        imageCard = binding.imageCard
-        imageView = binding.imageView
-        checkHint = binding.checkHint
         imageCard.setOnClickListener {
             //to do
         }
