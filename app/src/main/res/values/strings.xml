@@ -9,4 +9,7 @@
     <string name="base_url">http://100.0.2.2:8080</string>
     <string name="warning_message">Incorrect username or password.</string>
     <string name="error_message">Can\'t connect to the server. Try again later.</string>
+    <string name="error_fetch">Can\'t fetch photos. Try again later.</string>
+    <string name="fetch_status">Fetching: %1$d / 20</string>
+    <string name="pick_status">Picking: %1$d / 6</string>
 </resources>

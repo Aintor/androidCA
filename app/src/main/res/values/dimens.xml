@@ -7,4 +7,5 @@
     <dimen name="input_size">10sp</dimen>
     <dimen name="button_margin">10dp</dimen>
     <dimen name="card_margin">5dp</dimen>
+    <dimen name="animation_dimen">100dp</dimen>
 </resources>

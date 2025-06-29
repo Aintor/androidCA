@@ -63,4 +63,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    fun isCheckSuccessful(selectedData: Map<Int, String>) {
+        displayLoadingAnimation()
+        lifecycleScope.launch {
+            delay(500)
+            withContext(Dispatchers.Main) {
+                supportFragmentManager.beginTransaction()
+                    .replace(fragment_container.id, PlayFragment.newInstance(selectedData))
+                    .commit()
+            }
+        }
+    }
 }
