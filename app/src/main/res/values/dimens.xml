@@ -8,4 +8,5 @@
     <dimen name="button_margin">10dp</dimen>
     <dimen name="card_margin">5dp</dimen>
     <dimen name="animation_dimen">100dp</dimen>
+    <dimen name="stroke_width">3dp</dimen>
 </resources>

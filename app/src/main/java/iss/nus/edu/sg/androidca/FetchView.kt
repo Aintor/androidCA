@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.card.MaterialCardView
@@ -13,9 +14,11 @@ import iss.nus.edu.sg.androidca.databinding.FetchViewBinding
 
 class FetchView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null): FrameLayout(context, attrs) {
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
     private val binding = FetchViewBinding.inflate(LayoutInflater.from(context), this, true)
     private val imageCard: MaterialCardView = binding.imageCard
+    private val rootLayout: ConstraintLayout = binding.rootLayout
     private val imageView: ImageView = binding.imageView
     private val checkHint: ImageView = binding.checkHint
     private val loadingAnimation: LottieAnimationView = binding.loadingCard
@@ -42,12 +45,19 @@ class FetchView @JvmOverloads constructor(
     }
 
     fun setVisible() {
-        this.visibility = VISIBLE
+        rootLayout.visibility = VISIBLE
     }
 
     fun setImage(bitmap: Bitmap, alt: String) {
         loadingAnimation.visibility = GONE
         imageView.setImageBitmap(bitmap)
         imageView.contentDescription = alt
+    }
+
+    fun resetFetchView() {
+        rootLayout.visibility = INVISIBLE
+        loadingAnimation.visibility = VISIBLE
+        imageCard.strokeColor = ContextCompat.getColor(context, android.R.color.transparent)
+        checkHint.visibility = GONE
     }
 }

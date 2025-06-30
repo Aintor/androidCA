@@ -14,10 +14,10 @@ import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.File
 import java.io.FileOutputStream
-import java.net.URL
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import iss.nus.edu.sg.androidca.databinding.FragmentFetchBinding
 import www.sanju.motiontoast.MotionToast
@@ -28,8 +28,8 @@ class FetchFragment: Fragment() {
     private val binding get() = _binding!!
     private var fetchJob: Job? = null
     private val fetchViews = mutableListOf<FetchView>()
-    private val alts = mutableSetOf<String>()
-    private val selectedIndexes = mutableSetOf<Int>()
+    private val alts = mutableListOf<String>()
+    private val selectedIndexes = mutableListOf<Int>()
     private var isAddable = true
     private var isRemovable = false
     private var isFetched = false
@@ -37,6 +37,7 @@ class FetchFragment: Fragment() {
     private lateinit var fetchButton: MaterialButton
     private lateinit var fetch_status: TextView
     private lateinit var fetch_grid: GridLayout
+    private lateinit var fetch_card: MaterialCardView
     private lateinit var check_button: ImageButton
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,20 +46,15 @@ class FetchFragment: Fragment() {
     ) : View? {
         _binding = FragmentFetchBinding.inflate(inflater, container, false)
         initUI()
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fetchButton.setOnClickListener {
-            isFetched = false
-            fetchJob?.cancel()
-            fetchViews.clear()
-            alts.clear()
-            selectedIndexes.clear()
-            fetch_grid.removeAllViews()
+        fetch_grid.post {
+            val cellWidth = fetch_grid.width / 4
+            val cellHeight = fetch_grid.height / 5
             repeat(20) { index ->
                 val fetchView = FetchView(requireContext())
+                fetchView.layoutParams = GridLayout.LayoutParams().apply {
+                    width = cellWidth
+                    height = cellHeight
+                }
                 fetchView.checkIsFetched = ::isFetchedNow
                 fetchView.checkIsAddable = ::isAddableNow
                 fetchView.checkIsRemovable = ::isRemovableNow
@@ -68,16 +64,33 @@ class FetchFragment: Fragment() {
                 fetchViews.add(fetchView)
                 fetch_grid.addView(fetchView)
             }
+        }
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        fetchButton.setOnClickListener {
+            isFetched = false
+            fetchJob?.cancel()
+            for (fetchView in fetchViews) {
+                fetchView.resetFetchView()
+            }
+            alts.clear()
+            selectedIndexes.clear()
+            val cacheDir = requireContext().cacheDir
+            cacheDir.listFiles()?.forEach { it.delete() }
             val urlText = url.text.toString()
             fetchJob = viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                 try {
+                    withContext(Dispatchers.Main) {
+                        fetch_status.text = getString(R.string.resolve_url)
+                    }
                     val document = Jsoup.connect(urlText).get()
                     val images = document.select("img")
                     var count = 0
-                    val cacheDir = requireContext().cacheDir
                     withContext(Dispatchers.Main) {
                         fetch_status.text = getString(R.string.fetch_status, count)
-                        fetch_grid.visibility = View.VISIBLE
                     }
                     for (img in images) {
                         if (count >= 20) break
@@ -89,7 +102,10 @@ class FetchFragment: Fragment() {
                         val alt = img.attr("alt").ifBlank { "image_$count" }
                         if (!src.endsWith(".svg")) {
                             try {
-                                val urlStream = URL(src).openStream()
+                                val connection = Jsoup.connect(src)
+                                    .ignoreContentType(true)
+                                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0 Safari/537.36")
+                                val urlStream = connection.execute().bodyStream()
                                 val fileName = "$count.jpg"
                                 val file = File(cacheDir, fileName)
                                 val output = FileOutputStream(file)
@@ -109,12 +125,17 @@ class FetchFragment: Fragment() {
                             }
                         }
                     }
+                    withContext(Dispatchers.Main) {
+                        checkState()
+                        isFetched = true
+                    }
                 } catch (e: Exception) {
                     Log.e("FetchFragment", "Image fetch start failed: ${e.message}")
-                    fetchViews.clear()
-                    fetch_grid.removeAllViews()
-                    fetch_grid.visibility = View.INVISIBLE
+                    for (fetchView in fetchViews) {
+                        fetchView.resetFetchView()
+                    }
                     withContext(Dispatchers.Main) {
+                        fetch_status.text = ""
                         MotionToast.createToast(requireActivity(),
                             "Error",
                             getString(R.string.error_fetch),
@@ -123,10 +144,6 @@ class FetchFragment: Fragment() {
                             MotionToast.SHORT_DURATION,
                             ResourcesCompat.getFont(requireActivity(),R.font.normal))
                     }
-                }
-                withContext(Dispatchers.Main) {
-                    checkState()
-                    isFetched = true
                 }
             }
         }
@@ -148,6 +165,7 @@ class FetchFragment: Fragment() {
         fetchButton = binding.fetchButton
         fetch_status = binding.fetchStatus
         fetch_grid = binding.fetchGrid
+        fetch_card = binding.fetchCard
         check_button = binding.checkButton
     }
 

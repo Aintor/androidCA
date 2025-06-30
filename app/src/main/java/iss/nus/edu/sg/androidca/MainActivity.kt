@@ -32,6 +32,11 @@ class MainActivity : AppCompatActivity() {
             insets
         }
         initUI()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(fragment_container.id, FetchFragment())
+                .commit()
+        }
     }
     fun initUI() {
         fragment_container = binding.fragmentContainer
@@ -43,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 loading_animation.visibility = View.VISIBLE
             }
-            delay(1500)
+            delay(2000)
             withContext(Dispatchers.Main) {
                 loading_animation.visibility = View.GONE
             }
@@ -53,25 +58,32 @@ class MainActivity : AppCompatActivity() {
     fun isLoginSuccessful(username: String, isPaid: Boolean) {
         this.username = username
         this.isPaid = isPaid
+        fragment_container.visibility = View.INVISIBLE
         displayLoadingAnimation()
+        supportFragmentManager.beginTransaction()
+            .replace(fragment_container.id, FetchFragment())
+            .commit()
         lifecycleScope.launch {
-            delay(500)
+            delay(2000)
             withContext(Dispatchers.Main) {
-                supportFragmentManager.beginTransaction()
-                    .replace(fragment_container.id, FetchFragment())
-                    .commit()
+               fragment_container.visibility = View.VISIBLE
             }
         }
+
     }
 
     fun isCheckSuccessful(selectedData: Map<Int, String>) {
+        fragment_container.visibility = View.INVISIBLE
         displayLoadingAnimation()
+        supportFragmentManager.beginTransaction()
+            .replace(fragment_container.id, PlayFragment.newInstance(selectedData, isPaid), "PLAY")
+            .commit()
         lifecycleScope.launch {
-            delay(500)
+            delay(2000)
             withContext(Dispatchers.Main) {
-                supportFragmentManager.beginTransaction()
-                    .replace(fragment_container.id, PlayFragment.newInstance(selectedData))
-                    .commit()
+                fragment_container.visibility = View.VISIBLE
+                val playFragment = supportFragmentManager.findFragmentByTag("PLAY") as? PlayFragment
+                playFragment?.start()
             }
         }
     }

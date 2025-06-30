@@ -10,6 +10,11 @@
     <string name="warning_message">Incorrect username or password.</string>
     <string name="error_message">Can\'t connect to the server. Try again later.</string>
     <string name="error_fetch">Can\'t fetch photos. Try again later.</string>
+    <string name="resolve_url">Resolving the url</string>
     <string name="fetch_status">Fetching: %1$d / 20</string>
     <string name="pick_status">Picking: %1$d / 6</string>
+    <string name="check_description">Check your pick</string>
+    <string name="game_start">GO</string>
+    <string name="stop_watch">Time: %1$ds</string>
+    <string name="play_hint">Matches: %1$d / 6</string>
 </resources>

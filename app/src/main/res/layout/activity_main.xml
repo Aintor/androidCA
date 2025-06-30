@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@color/game">
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
@@ -22,6 +23,7 @@
             app:lottie_rawRes="@raw/loading"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_repeatMode="restart"/>
+            app:lottie_repeatMode="restart"
+            android:backgroundTint="@color/game"/>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
