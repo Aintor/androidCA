@@ -1,5 +1,8 @@
 package iss.nus.edu.sg.androidca
 
+import android.animation.Animator
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.SoundPool
@@ -44,6 +47,8 @@ class PlayFragment: Fragment() {
     private var correctSoundId = 0
     private var incorrectSoundId = 0
     private var gameoverSoundId = 0
+    private var hintAnimator: Animator? = null
+    private var stopwatchAnimator: Animator? = null
     private var timer: Timer? = null
     private var isFlippable = false
     private var flippedCards = mutableListOf<CardView>()
@@ -86,6 +91,10 @@ class PlayFragment: Fragment() {
         _binding = null
         timer?.cancel()
         soundPool.release()
+        playMusicPlayer.release()
+        upbeatMusicPlayer.release()
+        hintAnimator?.cancel()
+        stopwatchAnimator?.cancel()
     }
 
     fun initUI() {
@@ -281,6 +290,8 @@ class PlayFragment: Fragment() {
         }
         if (cardCount == selectedData.size) {
             timer?.cancel()
+            hintAnimator?.cancel()
+            stopwatchAnimator?.cancel()
             upbeatMusicPlayer.stop()
             winAnimation.visibility = View.VISIBLE
             winAnimation.playAnimation()
@@ -292,6 +303,30 @@ class PlayFragment: Fragment() {
         fadeOutMediaPlayer(playMusicPlayer)
         fadeInMediaPlayer(upbeatMusicPlayer)
         playHint.setTextColor(requireContext().getColor(R.color.red))
+        hintAnimator = createUpbeatAnimation(playHint)
+        hintAnimator?.start()
         stopWatch.setTextColor(requireContext().getColor(R.color.red))
+        stopwatchAnimator = createUpbeatAnimation(stopWatch)
+        stopwatchAnimator?.start()
+    }
+
+    fun createUpbeatAnimation(view: View): Animator {
+        val scaleX = ObjectAnimator.ofFloat(view, View.SCALE_X, 1.0f, 1.1f)
+        val scaleY = ObjectAnimator.ofFloat(view, View.SCALE_Y, 1.0f, 1.1f)
+
+        val duration = 500L
+        scaleX.duration = duration
+        scaleY.duration = duration
+
+        scaleX.repeatMode = ObjectAnimator.REVERSE
+        scaleY.repeatMode = ObjectAnimator.REVERSE
+
+        scaleX.repeatCount = ObjectAnimator.INFINITE
+        scaleY.repeatCount = ObjectAnimator.INFINITE
+
+        val breathingAnimator = AnimatorSet()
+        breathingAnimator.play(scaleX).with(scaleY)
+
+        return breathingAnimator
     }
 }
