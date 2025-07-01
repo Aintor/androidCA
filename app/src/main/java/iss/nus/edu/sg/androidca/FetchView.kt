@@ -34,7 +34,7 @@ class FetchView @JvmOverloads constructor(
                 if (checkHint.visibility == GONE && checkIsAddable?.invoke() == true) {
                     showCardPress()
                     position?.let { onSelected?.invoke(it) }
-                    imageCard.strokeColor = ContextCompat.getColor(context, R.color.green)
+                    imageCard.strokeColor = ContextCompat.getColor(context, R.color.deep_retro)
                     checkHint.visibility = VISIBLE
                 } else if (checkHint.visibility == VISIBLE && checkIsRemovable?.invoke() == true) {
                     showCardPress()

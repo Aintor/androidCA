@@ -273,7 +273,7 @@ class PlayFragment: Fragment() {
 
         view?.postDelayed({
             rightBar.visibility = View.INVISIBLE
-            centerBar.setTextColor(requireContext().getColor(R.color.green))
+            centerBar.setTextColor(requireContext().getColor(R.color.deep_retro))
             centerBar.text = getString(R.string.game_start)
             centerBar.visibility = View.VISIBLE
         }, 3000)

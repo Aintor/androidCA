@@ -39,7 +39,7 @@ class LeaderboardView @JvmOverloads constructor(
             headerBinding.time to "Time"
         )
 
-        val headerColor = ContextCompat.getColor(context, R.color.red)
+        val headerColor = ContextCompat.getColor(context, R.color.deep_retro)
 
         for ((view, label) in headers) {
             view.text = label
