@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.androidca
 
+import android.animation.ObjectAnimator
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ import java.io.File
 import java.io.FileOutputStream
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
@@ -36,6 +38,7 @@ class FetchFragment: Fragment() {
     private lateinit var url: TextInputEditText
     private lateinit var fetchButton: MaterialButton
     private lateinit var fetch_status: TextView
+    private lateinit var loading_bar: LottieAnimationView
     private lateinit var fetch_grid: GridLayout
     private lateinit var fetch_card: MaterialCardView
     private lateinit var check_button: ImageButton
@@ -78,6 +81,8 @@ class FetchFragment: Fragment() {
             }
             alts.clear()
             selectedIndexes.clear()
+            loading_bar.visibility = View.INVISIBLE
+            resetLottieAnimation(loading_bar)
             val cacheDir = requireContext().cacheDir
             cacheDir.listFiles()?.forEach { it.delete() }
             val urlText = url.text.toString()
@@ -91,6 +96,8 @@ class FetchFragment: Fragment() {
                     var count = 0
                     withContext(Dispatchers.Main) {
                         fetch_status.text = getString(R.string.fetch_status, count)
+                        loading_bar.visibility = View.VISIBLE
+                        updateLottieProgress(loading_bar, count*5f)
                     }
                     for (img in images) {
                         if (count >= 20) break
@@ -117,6 +124,7 @@ class FetchFragment: Fragment() {
                                 withContext(Dispatchers.Main) {
                                     val bitmap = BitmapFactory.decodeFile(file.absolutePath)
                                     fetchViews[count].setImage(bitmap, alt)
+                                    updateLottieProgress(loading_bar, count*5f)
                                     alts.add(alt)
                                 }
                                 count++
@@ -126,6 +134,7 @@ class FetchFragment: Fragment() {
                         }
                     }
                     withContext(Dispatchers.Main) {
+                        updateLottieProgress(loading_bar, count*100f, false)
                         checkState()
                         isFetched = true
                     }
@@ -136,6 +145,8 @@ class FetchFragment: Fragment() {
                     }
                     withContext(Dispatchers.Main) {
                         fetch_status.text = ""
+                        loading_bar.visibility = View.INVISIBLE
+                        resetLottieAnimation(loading_bar)
                         MotionToast.createToast(requireActivity(),
                             "Error",
                             getString(R.string.error_fetch),
@@ -158,11 +169,13 @@ class FetchFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        loading_bar.cancelAnimation()
     }
 
     fun initUI() {
         url = binding.urlInput
         fetchButton = binding.fetchButton
+        loading_bar = binding.loadingBar
         fetch_status = binding.fetchStatus
         fetch_grid = binding.fetchGrid
         fetch_card = binding.fetchCard
@@ -190,5 +203,19 @@ class FetchFragment: Fragment() {
         }
         isAddable = selectedIndexes.size < 6
         isRemovable = selectedIndexes.isNotEmpty()
+    }
+    fun updateLottieProgress(lottieView: LottieAnimationView, percentage: Float, animated: Boolean = true) {
+        val lottieProgress = (percentage / 100.0f).coerceIn(0.0f, 1.0f)
+        if (animated) {
+            val animator = ObjectAnimator.ofFloat(lottieView, "progress", lottieView.progress, lottieProgress)
+            animator.duration = 300
+            animator.start()
+        } else {
+            lottieView.progress = lottieProgress
+        }
+    }
+
+    fun resetLottieAnimation(lottieView: LottieAnimationView) {
+        lottieView.progress = 0f
     }
 }

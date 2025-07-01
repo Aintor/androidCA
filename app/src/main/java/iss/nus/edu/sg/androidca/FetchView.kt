@@ -32,10 +32,12 @@ class FetchView @JvmOverloads constructor(
         imageCard.setOnClickListener {
             if (checkIsFetched?.invoke() == true) {
                 if (checkHint.visibility == GONE && checkIsAddable?.invoke() == true) {
+                    showCardPress()
                     position?.let { onSelected?.invoke(it) }
                     imageCard.strokeColor = ContextCompat.getColor(context, R.color.green)
                     checkHint.visibility = VISIBLE
                 } else if (checkHint.visibility == VISIBLE && checkIsRemovable?.invoke() == true) {
+                    showCardPress()
                     position?.let { onDeselected?.invoke(it) }
                     imageCard.strokeColor = ContextCompat.getColor(context, android.R.color.transparent)
                     checkHint.visibility = GONE
@@ -44,20 +46,38 @@ class FetchView @JvmOverloads constructor(
         }
     }
 
+    fun showCardPress() {
+        imageCard.animate()
+            .scaleX(0.95f)
+            .scaleY(0.95f)
+            .setDuration(100)
+            .withEndAction {
+                imageCard.animate()
+                    .scaleX(1f)
+                    .scaleY(1f)
+                    .setDuration(100)
+                    .start()
+            }
+            .start()
+    }
+
     fun setVisible() {
         rootLayout.visibility = VISIBLE
     }
 
     fun setImage(bitmap: Bitmap, alt: String) {
+        imageCard.alpha = 1f
         loadingAnimation.visibility = GONE
         imageView.setImageBitmap(bitmap)
         imageView.contentDescription = alt
     }
 
     fun resetFetchView() {
+        imageCard.alpha = 0.2f
         rootLayout.visibility = INVISIBLE
         loadingAnimation.visibility = VISIBLE
         imageCard.strokeColor = ContextCompat.getColor(context, android.R.color.transparent)
         checkHint.visibility = GONE
+        imageView.setImageBitmap(null)
     }
 }

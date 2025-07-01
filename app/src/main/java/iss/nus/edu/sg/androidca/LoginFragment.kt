@@ -47,6 +47,8 @@ class LoginFragment: Fragment() {
                     val passwordText = password.text.toString()
                     val url = URL("${getString(R.string.base_url)}/Login")
                     val conn = url.openConnection() as HttpURLConnection
+                    conn.connectTimeout = 5000
+                    conn.readTimeout = 10000
                     conn.requestMethod = "POST"
                     conn.setRequestProperty("Content-Type", "application/json")
                     conn.doOutput = true

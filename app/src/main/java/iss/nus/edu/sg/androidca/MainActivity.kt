@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.lifecycleScope
 import iss.nus.edu.sg.androidca.databinding.ActivityMainBinding
+import iss.nus.edu.sg.androidca.databinding.FragmentLeaderboardBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loading_animation: FrameLayout
     private lateinit var username: String
     private var isPaid = false
+    private val loadingDelay = 2000L
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         initUI()
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(fragment_container.id, FetchFragment())
+                .replace(fragment_container.id, LoginFragment())
                 .commit()
         }
     }
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 loading_animation.visibility = View.VISIBLE
             }
-            delay(2000)
+            delay(loadingDelay)
             withContext(Dispatchers.Main) {
                 loading_animation.visibility = View.GONE
             }
@@ -79,11 +81,25 @@ class MainActivity : AppCompatActivity() {
             .replace(fragment_container.id, PlayFragment.newInstance(selectedData, isPaid), "PLAY")
             .commit()
         lifecycleScope.launch {
-            delay(2000)
+            delay(loadingDelay)
             withContext(Dispatchers.Main) {
                 fragment_container.visibility = View.VISIBLE
                 val playFragment = supportFragmentManager.findFragmentByTag("PLAY") as? PlayFragment
                 playFragment?.start()
+            }
+        }
+    }
+
+    fun isPlaySuccessful(username: String, secondsElapsed: Int) {
+        fragment_container.visibility = View.INVISIBLE
+        displayLoadingAnimation()
+        supportFragmentManager.beginTransaction()
+            .replace(fragment_container.id, LeaderboardFragment.newInstance(username, secondsElapsed))
+            .commit()
+        lifecycleScope.launch {
+            delay(loadingDelay)
+            withContext(Dispatchers.Main) {
+                fragment_container.visibility = View.VISIBLE
             }
         }
     }
