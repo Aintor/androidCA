@@ -3,12 +3,15 @@ package iss.nus.edu.sg.androidca
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +20,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.material.card.MaterialCardView
 import iss.nus.edu.sg.androidca.databinding.FragmentPlayBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.Timer
 
 class PlayFragment: Fragment() {
@@ -36,11 +47,13 @@ class PlayFragment: Fragment() {
     private lateinit var playHint: TextView
     private lateinit var stopWatch: TextView
     private lateinit var playGrid: GridLayout
+    private lateinit var adCardView: MaterialCardView
     private lateinit var adImage: ImageView
     private lateinit var winAnimation: LottieAnimationView
     private lateinit var soundPool: SoundPool
     private lateinit var playMusicPlayer: MediaPlayer
     private lateinit var upbeatMusicPlayer: MediaPlayer
+    private val ads = mutableListOf<Bitmap>()
     private var secondsElapsed = 0
     private var countdownSoundId = 0
     private var flipSoundId = 0
@@ -105,6 +118,7 @@ class PlayFragment: Fragment() {
         playHint = binding.playHint
         stopWatch = binding.stopwatch
         playGrid = binding.playGrid
+        adCardView = binding.ad
         adImage = binding.adImage
         winAnimation = binding.winAnimation
     }
@@ -158,9 +172,36 @@ class PlayFragment: Fragment() {
 
     fun setAd() {
         if (isPaid) {
-            adImage.visibility = View.INVISIBLE
+            adCardView.visibility = View.INVISIBLE
         } else {
-            //to fetch ad image
+            lifecycleScope.launch(Dispatchers.IO) {
+                try {
+                    val url = URL("${getString(R.string.base_url)}/Ad")
+                    val conn = url.openConnection() as HttpURLConnection
+                    conn.connectTimeout = 5000
+                    conn.readTimeout = 10000
+                    conn.requestMethod = "GET"
+                    conn.setRequestProperty("Accept", "application/json")
+
+                    val response = conn.inputStream.bufferedReader().use { it.readText() }
+                    val result = JSONArray(response)
+
+                    for (i in 0 until result.length()) {
+                        val base64 = result.getString(i)
+                        val imageBytes = Base64.decode(base64, Base64.DEFAULT)
+                        val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                        ads.add(bitmap)
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        if (ads.isNotEmpty()) {
+                            adImage.setImageBitmap(ads[0])
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
         }
     }
 
@@ -250,6 +291,11 @@ class PlayFragment: Fragment() {
                         secondsElapsed += 1
                         stopWatch.text = getString(R.string.stop_watch, secondsElapsed)
                         scheduleNextTick()
+                        if (!isPaid && (secondsElapsed + 3) % 30 == 0) {
+                            Log.d("PlayFragment", ads.size.toString())
+                            val adIndex = ((secondsElapsed + 3) / 30) % ads.size
+                            adImage.setImageBitmap(ads[adIndex])
+                        }
                     }
                 }
             }, 1000)
