@@ -10,4 +10,5 @@
     <dimen name="animation_dimen">100dp</dimen>
     <dimen name="stroke_width">3dp</dimen>
     <dimen name="loading_bar_height">10dp</dimen>
+    <dimen name="leaderboard_padding">12dp</dimen>
 </resources>

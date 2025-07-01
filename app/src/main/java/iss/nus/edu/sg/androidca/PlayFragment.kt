@@ -1,6 +1,7 @@
 package iss.nus.edu.sg.androidca
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Bitmap
@@ -342,6 +343,11 @@ class PlayFragment: Fragment() {
             winAnimation.visibility = View.VISIBLE
             winAnimation.playAnimation()
             soundPool.play(gameoverSoundId, 1f, 1f, 1, 0, 1f)
+            winAnimation.addAnimatorListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(p0: Animator) {
+                    (activity as? MainActivity)?.isPlaySuccessful(secondsElapsed)
+                }
+            })
         }
     }
 

@@ -89,11 +89,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun isPlaySuccessful(username: String, secondsElapsed: Int) {
+    fun isPlaySuccessful(secondsElapsed: Int) {
         fragment_container.visibility = View.INVISIBLE
         displayLoadingAnimation()
         supportFragmentManager.beginTransaction()
-            .replace(fragment_container.id, LeaderboardFragment.newInstance(username, secondsElapsed))
+            .replace(fragment_container.id, LeaderboardFragment.newInstance(username, secondsElapsed), "LEADERBOARD")
+            .commit()
+        lifecycleScope.launch {
+            delay(loadingDelay)
+            withContext(Dispatchers.Main) {
+                fragment_container.visibility = View.VISIBLE
+                val leaderboardFragment = supportFragmentManager.findFragmentByTag("LEADERBOARD") as? LeaderboardFragment
+                leaderboardFragment?.setData()
+            }
+        }
+    }
+
+    fun backToFetch() {
+        fragment_container.visibility = View.INVISIBLE
+        displayLoadingAnimation()
+        supportFragmentManager.beginTransaction()
+            .replace(fragment_container.id, FetchFragment())
             .commit()
         lifecycleScope.launch {
             delay(loadingDelay)
