@@ -93,6 +93,9 @@ class FetchFragment: Fragment() {
                     }
                     val document = Jsoup.connect(urlText).get()
                     val images = document.select("img")
+                    if (images.isEmpty()) {
+                        throw Exception("Can not resolve the url")
+                    }
                     var count = 0
                     withContext(Dispatchers.Main) {
                         fetch_status.text = getString(R.string.fetch_status, count)
