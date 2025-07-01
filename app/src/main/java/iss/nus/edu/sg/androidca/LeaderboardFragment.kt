@@ -1,5 +1,6 @@
 package iss.nus.edu.sg.androidca
 
+import android.media.SoundPool
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,8 @@ class LeaderboardFragment : Fragment() {
     private var userRank: Int = 0
     private var secondsElapsed: Int = 0
     private val leaderboardEntries = mutableListOf<LeaderboardEntry>()
+    private lateinit var soundPool: SoundPool
+    private var leaderboardSoundId = 0
 
     companion object {
         fun newInstance(username: String, secondsElapsed: Int): LeaderboardFragment {
@@ -48,6 +51,7 @@ class LeaderboardFragment : Fragment() {
             secondsElapsed = it.getInt("secondsElapsed")
         }
         initUI()
+        initSound()
         return binding.root
     }
 
@@ -62,13 +66,20 @@ class LeaderboardFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        soundPool.release()
     }
 
     fun initUI() {
         leaderboard = binding.leaderboard
         backButton = binding.backButton
     }
+
+    fun initSound() {
+        soundPool = SoundPool.Builder().setMaxStreams(1).build()
+        leaderboardSoundId = soundPool.load(requireContext(), R.raw.leaderboard, 1)
+    }
     fun setData() {
+        soundPool.play(leaderboardSoundId, 1f, 1f, 0, 0, 1f)
         leaderboard.setData(leaderboardEntries, if (userRank > 0 || userRank < 6) userRank else null)
     }
 
