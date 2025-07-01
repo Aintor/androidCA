@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import iss.nus.edu.sg.androidca.databinding.FragmentLeaderboardBinding
-import iss.nus.edu.sg.androidca.databinding.FragmentPlayBinding
 
 class LeaderboardFragment : Fragment() {
     private var _binding: FragmentLeaderboardBinding? = null

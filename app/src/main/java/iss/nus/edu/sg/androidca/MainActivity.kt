@@ -10,7 +10,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.lifecycleScope
 import iss.nus.edu.sg.androidca.databinding.ActivityMainBinding
-import iss.nus.edu.sg.androidca.databinding.FragmentLeaderboardBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
