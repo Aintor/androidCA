@@ -47,6 +47,17 @@
         app:strokeColor="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
         android:layout_margin="@dimen/margin_textedit">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/fetch_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_rawRes="@raw/fetch_image"
+            android:scaleY="0.7"
+            android:scaleX="0.7"
+            app:lottie_speed="0.8"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_repeatMode="reverse" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">

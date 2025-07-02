@@ -59,11 +59,17 @@
                 android:scaleType="centerCrop"
                 android:id="@+id/ad_image"/>
         </com.google.android.material.card.MaterialCardView>
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/win_animation"
+    <FrameLayout
+        android:id="@+id/win_animation_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:lottie_rawRes="@raw/win"
-        app:lottie_speed="1.5"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:background="@color/transparent_game">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/win_animation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:lottie_rawRes="@raw/win"
+            app:lottie_speed="1.5" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

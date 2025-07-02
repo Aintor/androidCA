@@ -42,6 +42,7 @@ class FetchFragment: Fragment() {
     private lateinit var fetch_grid: GridLayout
     private lateinit var fetch_card: MaterialCardView
     private lateinit var check_button: ImageButton
+    private lateinit var fetch_image: LottieAnimationView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,6 +82,7 @@ class FetchFragment: Fragment() {
             }
             alts.clear()
             selectedIndexes.clear()
+            fetch_image.visibility = View.INVISIBLE
             loading_bar.visibility = View.INVISIBLE
             resetLottieAnimation(loading_bar)
             val cacheDir = requireContext().cacheDir
@@ -147,6 +149,7 @@ class FetchFragment: Fragment() {
                         fetchView.resetFetchView()
                     }
                     withContext(Dispatchers.Main) {
+                        fetch_image.visibility = View.VISIBLE
                         fetch_status.text = ""
                         loading_bar.visibility = View.INVISIBLE
                         resetLottieAnimation(loading_bar)
@@ -183,6 +186,7 @@ class FetchFragment: Fragment() {
         fetch_grid = binding.fetchGrid
         fetch_card = binding.fetchCard
         check_button = binding.checkButton
+        fetch_image = binding.fetchImage
     }
 
     fun isFetchedNow(): Boolean = isFetched

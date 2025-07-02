@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -51,6 +52,7 @@ class PlayFragment: Fragment() {
     private lateinit var adCardView: MaterialCardView
     private lateinit var adImage: ImageView
     private lateinit var winAnimation: LottieAnimationView
+    private lateinit var winAnimationLayout: FrameLayout
     private lateinit var soundPool: SoundPool
     private lateinit var playMusicPlayer: MediaPlayer
     private lateinit var upbeatMusicPlayer: MediaPlayer
@@ -122,6 +124,7 @@ class PlayFragment: Fragment() {
         adCardView = binding.ad
         adImage = binding.adImage
         winAnimation = binding.winAnimation
+        winAnimationLayout = binding.winAnimationLayout
     }
 
     fun initMusic() {
@@ -273,7 +276,7 @@ class PlayFragment: Fragment() {
 
         view?.postDelayed({
             rightBar.visibility = View.INVISIBLE
-            centerBar.setTextColor(requireContext().getColor(R.color.deep_retro))
+            centerBar.setTextColor(requireContext().getColor(R.color.green))
             centerBar.text = getString(R.string.game_start)
             centerBar.visibility = View.VISIBLE
         }, 3000)
@@ -340,7 +343,7 @@ class PlayFragment: Fragment() {
             hintAnimator?.cancel()
             stopwatchAnimator?.cancel()
             upbeatMusicPlayer.stop()
-            winAnimation.visibility = View.VISIBLE
+            winAnimationLayout.visibility = View.VISIBLE
             winAnimation.playAnimation()
             soundPool.play(gameoverSoundId, 1f, 1f, 1, 0, 1f)
             winAnimation.addAnimatorListener(object : AnimatorListenerAdapter() {
@@ -354,10 +357,10 @@ class PlayFragment: Fragment() {
     fun changeUpbeat() {
         fadeOutMediaPlayer(playMusicPlayer)
         fadeInMediaPlayer(upbeatMusicPlayer)
-        playHint.setTextColor(requireContext().getColor(R.color.red))
+        playHint.setTextColor(requireContext().getColor(R.color.deep_retro))
         hintAnimator = createUpbeatAnimation(playHint)
         hintAnimator?.start()
-        stopWatch.setTextColor(requireContext().getColor(R.color.red))
+        stopWatch.setTextColor(requireContext().getColor(R.color.deep_retro))
         stopwatchAnimator = createUpbeatAnimation(stopWatch)
         stopwatchAnimator?.start()
     }
