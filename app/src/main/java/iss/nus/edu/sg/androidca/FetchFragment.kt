@@ -139,7 +139,7 @@ class FetchFragment: Fragment() {
                         }
                     }
                     withContext(Dispatchers.Main) {
-                        updateLottieProgress(loading_bar, count*100f, false)
+                        updateLottieProgress(loading_bar, 100f)
                         checkState()
                         isFetched = true
                     }
