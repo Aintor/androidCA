@@ -11,4 +11,5 @@
     <dimen name="stroke_width">3dp</dimen>
     <dimen name="loading_bar_height">10dp</dimen>
     <dimen name="leaderboard_padding">12dp</dimen>
+    <dimen name="leaderboard_size">20sp</dimen>
 </resources>
