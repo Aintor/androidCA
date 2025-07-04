@@ -82,7 +82,6 @@ class FetchFragment: Fragment() {
             }
             alts.clear()
             selectedIndexes.clear()
-            fetch_image.visibility = View.INVISIBLE
             loading_bar.visibility = View.INVISIBLE
             resetLottieAnimation(loading_bar)
             val cacheDir = requireContext().cacheDir
@@ -103,6 +102,7 @@ class FetchFragment: Fragment() {
                         fetch_status.text = getString(R.string.fetch_status, count)
                         loading_bar.visibility = View.VISIBLE
                         updateLottieProgress(loading_bar, count*5f)
+                        fetch_image.visibility = View.INVISIBLE
                     }
                     for (img in images) {
                         if (count >= 20) break
