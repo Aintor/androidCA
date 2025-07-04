@@ -2,10 +2,10 @@ package iss.nus.edu.sg.androidca
 
 import android.media.SoundPool
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
@@ -13,6 +13,8 @@ import iss.nus.edu.sg.androidca.databinding.FragmentLeaderboardBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -120,6 +122,13 @@ class LeaderboardFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                MotionToast.createToast(requireActivity(),
+                    "Error",
+                    getString(R.string.error_message),
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(requireActivity(),R.font.normal))
             }
         }
     }

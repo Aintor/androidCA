@@ -295,7 +295,7 @@ class PlayFragment: Fragment() {
                         secondsElapsed += 1
                         stopWatch.text = getString(R.string.stop_watch, secondsElapsed)
                         scheduleNextTick()
-                        if (!isPaid && (secondsElapsed + 3) % 30 == 0) {
+                        if (!isPaid && ads.isNotEmpty() && (secondsElapsed + 3) % 30 == 0) {
                             Log.d("PlayFragment", ads.size.toString())
                             val adIndex = ((secondsElapsed + 3) / 30) % ads.size
                             adImage.setImageBitmap(ads[adIndex])
