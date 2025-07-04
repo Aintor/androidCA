@@ -22,5 +22,15 @@
         android:fontFamily="@font/normal"
         android:text="@string/back_to_fetch"
         android:layout_marginBottom="@dimen/margin_textedit" />
-
+    <TextView
+        android:id="@+id/leaderboard_error"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/back_button"
+        android:text="@string/leaderboard_error"
+        android:fontFamily="@font/title"
+        android:gravity="center"
+        android:textColor="@color/red"
+        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

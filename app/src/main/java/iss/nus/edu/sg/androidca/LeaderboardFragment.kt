@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.button.MaterialButton
@@ -13,8 +13,6 @@ import iss.nus.edu.sg.androidca.databinding.FragmentLeaderboardBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import www.sanju.motiontoast.MotionToast
-import www.sanju.motiontoast.MotionToastStyle
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -23,6 +21,7 @@ class LeaderboardFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var leaderboard: LeaderboardView
     private lateinit var backButton: MaterialButton
+    private lateinit var leaderboard_error: TextView
     private lateinit var username: String
     private var userRank: Int = 0
     private var secondsElapsed: Int = 0
@@ -74,6 +73,7 @@ class LeaderboardFragment : Fragment() {
     fun initUI() {
         leaderboard = binding.leaderboard
         backButton = binding.backButton
+        leaderboard_error = binding.leaderboardError
     }
 
     fun initSound() {
@@ -82,7 +82,14 @@ class LeaderboardFragment : Fragment() {
     }
     fun setData() {
         soundPool.play(leaderboardSoundId, 1f, 1f, 0, 0, 1f)
-        leaderboard.setData(leaderboardEntries, if (userRank > 0 || userRank < 6) userRank else null)
+        if (leaderboardEntries.isNotEmpty()) {
+            leaderboard.setData(
+                leaderboardEntries,
+                if (userRank > 0 || userRank < 6) userRank else null
+            )
+        } else {
+            leaderboard_error.visibility = View.VISIBLE
+        }
     }
 
     fun fetchLeaderboard(username: String, bestTime: Int) {
@@ -122,13 +129,6 @@ class LeaderboardFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                MotionToast.createToast(requireActivity(),
-                    "Error",
-                    getString(R.string.error_message),
-                    MotionToastStyle.ERROR,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.SHORT_DURATION,
-                    ResourcesCompat.getFont(requireActivity(),R.font.normal))
             }
         }
     }

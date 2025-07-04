@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat.getFont
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isInvisible
 import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import iss.nus.edu.sg.androidca.databinding.ListItemLeaderboardBinding
@@ -28,6 +29,7 @@ class LeaderboardView @JvmOverloads constructor(
         orientation = VERTICAL
         addHeaderRow()
         addDataRows()
+        this.visibility = INVISIBLE
     }
 
     private fun addHeaderRow() {
@@ -60,6 +62,7 @@ class LeaderboardView @JvmOverloads constructor(
     }
 
     fun setData(entries: List<LeaderboardEntry>, highlightedPlayerRank: Int?) {
+        this.visibility = VISIBLE
         for (i in 0 until 5) {
             val binding = rowBindings[i]
             if (i < entries.size) {

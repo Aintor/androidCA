@@ -18,4 +18,5 @@
     <string name="stop_watch">Time: %1$ds</string>
     <string name="play_hint">Matches: %1$d / 6</string>
     <string name="back_to_fetch">back to fetch</string>
+    <string name="leaderboard_error">Oops! Something went wrong loading the leaderboard.</string>
 </resources>
